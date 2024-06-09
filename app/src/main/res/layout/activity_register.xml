@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="60dp"
+        android:layout_gravity="center"
+        android:src="@drawable/saystorylogo"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textSize="50px"
+        android:text="REGISTER"/>
+
+    <TextView
+        android:id="@+id/rc87my6wd1we"
+        android:textColor="#080808"
+        android:textSize="13sp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginStart="36dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Nama"
+        />
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/NamaRegister"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="34dp"
+        android:background="@drawable/rounded_shape"/>
+
+    <TextView
+        android:textColor="#080808"
+        android:textSize="13sp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginStart="36dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Email"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/EmailBlokRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="34dp"
+        app:helperTextTextColor="@color/red"
+        app:startIconCheckable="true">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/EmailRegister"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/rounded_shape"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/raiyi4t1vgbq"
+        android:textColor="#080808"
+        android:textSize="13sp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginStart="35dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Password"
+        />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordBlokRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="34dp"
+        app:helperTextTextColor="@color/red"
+        app:passwordToggleEnabled="true">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/passwordRegister"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_shape" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.example.submission1intermediate.Button.Button
+        android:id="@+id/btnRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Register"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/Logintxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="34dp"
+        android:text="Login Here!!"/>
+</androidx.appcompat.widget.LinearLayoutCompat>
