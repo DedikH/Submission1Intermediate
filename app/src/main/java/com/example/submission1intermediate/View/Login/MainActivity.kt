@@ -1,26 +1,25 @@
-package com.example.submission1intermediate
+package com.example.submission1intermediate.View.Login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.telecom.Call
 import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import com.example.submission1intermediate.API.APIConfig
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.example.submission1intermediate.API.APIConfig.Companion.postLogin
+import com.example.submission1intermediate.API.APIServices
 import com.example.submission1intermediate.API.Response.LoginResponse
-import com.example.submission1intermediate.API.Response.LoginResult
+import com.example.submission1intermediate.Auth.AuthPref
+import com.example.submission1intermediate.Auth.AuthRepository
+import com.example.submission1intermediate.View.Dashboard.Dashboard
+import com.example.submission1intermediate.View.Register.Register
 import com.example.submission1intermediate.databinding.ActivityMainBinding
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Callback
 import retrofit2.Response
@@ -123,38 +122,38 @@ class MainActivity : AppCompatActivity() {
                 response: Response<LoginResponse>
             ) {
                 if (response.isSuccessful) {
-                    // Handle successful login...
+                    AlertDialog.Builder(this@MainActivity).apply {
+                        setTitle("Login Succes!")
+                        setMessage("Success")
+                        setPositiveButton("Lanjut") { _, _ ->
+                            val intent = Intent(context, Dashboard::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                        create()
+                        show()
+                    }
+                    val loginResponse = response.body()!!
+                    val token = loginResponse.loginResult.token
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    val errorMessage = errorBody ?: "Unknown error"
-                    Log.e("Login Error", errorMessage)
-
-                    // Handle login failure: toast message with specific error based on errorMessage
-                    Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                    AlertDialog.Builder(this@MainActivity).apply {
+                        setTitle("Login Failed!")
+                        setMessage("Try Again")
+                        setPositiveButton("Lanjut") { _, _ ->
+                            val intent = Intent(context, MainActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                        create()
+                        show()
+                    }
                 }
             }
 
             override fun onFailure(call: retrofit2.Call<LoginResponse>, t: Throwable) {
                 Log.e("Login Error", "Network failure: ${t.message}")
-
-                // Handle network failure: toast message, retry option, etc.
             }
         })
-    }
-
-
-    // Function to securely store the token (implementation details omitted)
-    private fun saveToken(token: String) {
-        // Implement logic to store the token securely in SharedPreferences or other suitable storage
-    }
-
-    // Function to navigate to the home screen (implementation details omitted)
-    private fun navigateToHomeScreen() {
-        // Implement logic to navigate to the home screen activity
-    }
-
-
-    companion object {
-        const val EXTRA_TOKEN = "extra_token"
     }
 }

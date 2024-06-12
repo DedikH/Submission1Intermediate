@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".View.Login.MainActivity"
     android:background="#ffffff"
     android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/fotoregister"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="60dp"
@@ -16,6 +17,7 @@
         android:src="@drawable/saystorylogo"/>
 
     <TextView
+        android:id="@+id/titleregister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -24,7 +26,7 @@
         android:text="REGISTER"/>
 
     <TextView
-        android:id="@+id/rc87my6wd1we"
+        android:id="@+id/namatxtregister"
         android:textColor="#080808"
         android:textSize="13sp"
         android:layout_marginBottom="1dp"
@@ -42,6 +44,7 @@
         android:background="@drawable/rounded_shape"/>
 
     <TextView
+        android:id="@+id/emailtitleregister"
         android:textColor="#080808"
         android:textSize="13sp"
         android:layout_marginBottom="1dp"
@@ -69,7 +72,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/raiyi4t1vgbq"
+        android:id="@+id/passwordtitleregister"
         android:textColor="#080808"
         android:textSize="13sp"
         android:layout_marginBottom="1dp"

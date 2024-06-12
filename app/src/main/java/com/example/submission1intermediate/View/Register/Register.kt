@@ -1,17 +1,18 @@
-package com.example.submission1intermediate
+package com.example.submission1intermediate.View.Register
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import android.view.View
 import com.example.submission1intermediate.API.APIConfig
 import com.example.submission1intermediate.API.Response.ResponseRegister
 import com.example.submission1intermediate.API.SharedPrefManager
+import com.example.submission1intermediate.View.Login.MainActivity
 import com.example.submission1intermediate.databinding.ActivityRegisterBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -132,5 +133,29 @@ class Register : AppCompatActivity() {
         startActivity(i)
     }
 
+    private fun playAnimation() {
+        ObjectAnimator.ofFloat(binding.fotoregister, View.TRANSLATION_X, -30f, 30f).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
 
+        val title = ObjectAnimator.ofFloat(binding.titleregister, View.ALPHA, 1f).setDuration(100)
+        val emailtxt = ObjectAnimator.ofFloat(binding.emailtitleregister, View.ALPHA, 1f).setDuration(100)
+        val passwordtxt = ObjectAnimator.ofFloat(binding.passwordtitleregister, View.ALPHA, 1f).setDuration(100)
+        val namatxt = ObjectAnimator.ofFloat(binding.namatxtregister, View.ALPHA, 1f).setDuration(100)
+        val nama = ObjectAnimator.ofFloat(binding.NamaRegister, View.ALPHA, 1f).setDuration(100)
+        val email = ObjectAnimator.ofFloat(binding.EmailBlokRegister, View.ALPHA, 1f).setDuration(100)
+        val password = ObjectAnimator.ofFloat(binding.EmailBlokRegister, View.ALPHA, 1f).setDuration(100)
+        val btnlogin = ObjectAnimator.ofFloat(binding.btnRegister, View.ALPHA, 1f).setDuration(100)
+        val txtlogin = ObjectAnimator.ofFloat(binding.Logintxt, View.ALPHA, 1f).setDuration(100)
+
+        val together = AnimatorSet().apply {
+            playTogether(email, password)
+        }
+        AnimatorSet().apply {
+            playSequentially(title, namatxt, nama,btnlogin, txtlogin, emailtxt, passwordtxt, together)
+            start()
+        }
+    }
 }
