@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".View.Login.Login"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/fotologin"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="60dp"
+        android:layout_gravity="center"
+        android:src="@drawable/saystorylogo"/>
+
+    <TextView
+        android:id="@+id/titlelogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textSize="50px"
+        android:alpha="0"
+        tools:alpha="100"
+        android:text="LOGIN"/>
+
+    <TextView
+        android:id="@+id/txtemail"
+        android:textColor="#080808"
+        android:textSize="13sp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginStart="36dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:alpha="0"
+        tools:alpha="100"
+        android:text="Email"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/EmailBlokLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="34dp"
+        android:alpha="0"
+        tools:alpha="100"
+        app:helperText="Email Invalid"
+        app:helperTextTextColor="@color/red"
+        app:startIconCheckable="true">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/EmailLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/rounded_shape" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/txtpassword"
+        android:textColor="#080808"
+        android:textSize="13sp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginStart="35dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:alpha="0"
+        tools:alpha="100"
+        android:text="Password"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordBlokLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="34dp"
+        android:alpha="0"
+        tools:alpha="100"
+        app:helperText="Password Kurang Dari 8 Character"
+        app:helperTextTextColor="@color/red"
+        app:passwordToggleEnabled="true">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/passwordlogin"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_shape" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.example.bismillahbisaintermediate.View.Button.Button
+        android:id="@+id/btnLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:alpha="0"
+        tools:alpha="100"
+        android:text="Login"
+        android:layout_gravity="center"
+        />
+    <TextView
+        android:id="@+id/registertext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        tools:alpha="100"
+        android:layout_marginHorizontal="34dp"
+        android:text="Register Here!!!"/>
+</androidx.appcompat.widget.LinearLayoutCompat>
