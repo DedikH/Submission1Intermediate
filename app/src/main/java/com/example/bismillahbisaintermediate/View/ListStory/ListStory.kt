@@ -45,7 +45,7 @@ class ListStory : AppCompatActivity() {
         StoryHandler()
     }
     private fun StoryHandler() {
-        showLoading(true)
+        showLoading(false)
         lifecycleScope.launch {
             val token = authToken ?: authRepository.getAuthToken().first()
             try {
