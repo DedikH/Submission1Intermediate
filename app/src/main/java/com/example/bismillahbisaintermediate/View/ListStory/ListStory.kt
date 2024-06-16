@@ -89,11 +89,6 @@ class ListStory : AppCompatActivity() {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    private fun testnew(){
-        lifecycleScope.launch {
-
-        }
-    }
 
     companion object {
         private val adapter = storyAdapter()
