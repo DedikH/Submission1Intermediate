@@ -2,12 +2,20 @@ package com.example.bismillahbisaintermediate.View.Register
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
+import com.example.bismillahbisaintermediate.API.APIConfig
 import com.example.bismillahbisaintermediate.R
+import com.example.bismillahbisaintermediate.SharedPrefManager
 import com.example.bismillahbisaintermediate.databinding.ActivityRegisterBinding
+import com.example.submission1intermediate.API.Response.ResponseRegister
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class Register : AppCompatActivity() {
     private lateinit var binding : ActivityRegisterBinding
@@ -19,6 +27,14 @@ class Register : AppCompatActivity() {
         emailerror()
         passworderror()
         playAnimation()
+        btnRegister()
+    }
+
+    private fun btnRegister(){
+        val button = binding.btnRegister
+        button.setOnClickListener{
+            RegisterUser()
+        }
     }
 
     //Email Error
@@ -71,5 +87,47 @@ class Register : AppCompatActivity() {
             playSequentially(title, namatxt, nama,btnlogin, txtlogin, emailtxt, passwordtxt, together)
             start()
         }
+    }
+
+    private fun RegisterUser() {
+        val nama = binding.NamaRegister.text.toString()
+        val email = binding.EmailRegister.text.toString()
+        val password = binding.passwordRegister.text.toString()
+
+        // Basic input validation (optional, depends on your needs)
+        if (nama.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            Log.e(ContentValues.TAG, "Registration failed: Please fill in all fields.")
+            return
+        }
+
+        APIConfig.postRegister().register(nama, email, password).enqueue(object :
+            Callback<ResponseRegister> {
+            override fun onResponse(
+                call: Call<ResponseRegister>,
+                response: Response<ResponseRegister>
+            ) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        if (!responseBody.error) {
+                            SharedPrefManager.getInstance(applicationContext).saveRegister(responseBody.user!!)
+                        } else {
+                            // Handle API-specific error (check for error code or message in response)
+                            Log.e(ContentValues.TAG, "Registration failed: ${responseBody.error}")
+                        }
+                    } else {
+                        // Handle unexpected empty response
+                        Log.e(ContentValues.TAG, "Unexpected empty response from server")
+                    }
+                } else {
+                    // Handle unsuccessful response (check for HTTP status code)
+                    Log.e(ContentValues.TAG, "Registration failed (code: ${response.code()})")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseRegister>, t: Throwable) {
+                Log.e(ContentValues.TAG, "Registration failed: ${t.message}")
+            }
+        })
     }
 }

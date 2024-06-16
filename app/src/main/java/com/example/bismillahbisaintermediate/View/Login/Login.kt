@@ -12,14 +12,19 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.bismillahbisaintermediate.API.APIConfig
 import com.example.bismillahbisaintermediate.API.APIConfig.Companion.postLogin
+import com.example.bismillahbisaintermediate.Auth.UserPreferenceDataStore
 import com.example.bismillahbisaintermediate.Auth.UserRepository
 import com.example.bismillahbisaintermediate.R
 import com.example.bismillahbisaintermediate.Response.LoginResponse
 import com.example.bismillahbisaintermediate.View.ListStory.ListStory
 import com.example.bismillahbisaintermediate.View.Register.Register
+import com.example.bismillahbisaintermediate.ViewModelFactory
 import com.example.bismillahbisaintermediate.databinding.ActivityLoginBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
@@ -32,10 +37,20 @@ class Login : AppCompatActivity() {
     private lateinit var userRepository : UserRepository
     private lateinit var loginViewModel : LoginViewModel
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Initialize the dependencies
+        val apiService = postLogin() // Assuming APIConfig.create() initializes APIServices
+        val userPreferenceDataStore = UserPreferenceDataStore(this) // Pass context if required
+
+        userRepository = UserRepository(apiService, userPreferenceDataStore)
+
+        val factory = ViewModelFactory(userRepository)
+        loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
 
         emailerror()
         passworderror()
@@ -148,7 +163,7 @@ class Login : AppCompatActivity() {
                         setTitle("Login Failed!")
                         setMessage("Try Again")
                         setPositiveButton("Lanjut") { _, _ ->
-                            val intent = Intent(context, ListStory::class.java)
+                            val intent = Intent(context, Login::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(intent)
                             finish()
@@ -164,6 +179,4 @@ class Login : AppCompatActivity() {
             }
         })
     }
-
-
 }
