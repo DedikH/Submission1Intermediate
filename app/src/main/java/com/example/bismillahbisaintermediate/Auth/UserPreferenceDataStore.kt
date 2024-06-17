@@ -21,8 +21,13 @@ class UserPreferenceDataStore(
             preferences[TOKEN_KEY] = token
         }
 }
-    fun GetToken() : Flow<String> {
-        val authToken = context.dataStore.data
+    suspend fun ClearSavedToken() {
+        context.dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
+    fun getToken(): Flow<String> {
+        return context.dataStore.data
             .catch { exception ->
                 if (exception is IOException) {
                     emit(emptyPreferences())
@@ -33,7 +38,6 @@ class UserPreferenceDataStore(
             .map { preferences ->
                 preferences[TOKEN_KEY] ?: ""
             }
-        return authToken
     }
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_prefs")

@@ -1,7 +1,9 @@
 package com.example.bismillahbisaintermediate.View.Login
 
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.bismillahbisaintermediate.Auth.UserRepository
 import com.example.bismillahbisaintermediate.Response.LoginResponse
@@ -20,4 +22,8 @@ class LoginViewModel(
             authRepository.saveAuthToken(token)
         }
     }
+    fun getAuthToken(): LiveData<String?> {
+        return authRepository.getAuthToken().asLiveData()
+    }
+
 }

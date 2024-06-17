@@ -27,6 +27,7 @@ import com.example.bismillahbisaintermediate.View.Register.Register
 import com.example.bismillahbisaintermediate.ViewModelFactory
 import com.example.bismillahbisaintermediate.databinding.ActivityLoginBinding
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,7 +37,8 @@ class Login : AppCompatActivity() {
     private lateinit var binding : ActivityLoginBinding
     private lateinit var userRepository : UserRepository
     private lateinit var loginViewModel : LoginViewModel
-
+    private lateinit var authRepository: UserRepository
+    private var authToken: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,12 +53,14 @@ class Login : AppCompatActivity() {
 
         val factory = ViewModelFactory(userRepository)
         loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
+        authRepository = UserRepository(apiService, userPreferenceDataStore)
 
         emailerror()
         passworderror()
         IntentRegister()
         playAnimation()
         btnLoginClick()
+//        checkSession()
     }
 
     private fun playAnimation() {
@@ -178,5 +182,20 @@ class Login : AppCompatActivity() {
                 Log.e("Login Error", "Network failure: ${t.message}")
             }
         })
+    }
+    private fun checkSession(){
+        lifecycleScope.launch {
+             authToken ?: authRepository.getAuthToken().collect{token ->
+                if(token!!.isNotEmpty()){
+                    val intent = Intent(this@Login, ListStory::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }else{
+                    val intent = Intent(this@Login, Login::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 }

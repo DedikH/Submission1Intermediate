@@ -14,11 +14,12 @@ class storyAdapter : ListAdapter<ListStoryItem, storyAdapter.myviewHolder>(DIFF_
     var listener : RVonclick? = null
     class myviewHolder (val binding : CardviewstoryBinding) : RecyclerView.ViewHolder(binding.root){
         fun onBind(item : ListStoryItem){
-            binding.namaUser.text = "${item.name}"
+            binding.tvItemName.text = "${item.name}"
+            binding.storyDescription.text = "${item.description}"
             if(item.photoUrl != null){
                 Glide.with(itemView.context)
                     .load(item.photoUrl)
-                    .into(binding.imagestory)
+                    .into(binding.ivItemPhoto)
             }
         }
     }
@@ -41,7 +42,7 @@ class storyAdapter : ListAdapter<ListStoryItem, storyAdapter.myviewHolder>(DIFF_
         }
 
         holder.binding.cvListStory.setOnClickListener{
-            getItem(position)?.let { it1 -> listener?.onItemClicked(it, it1) }
+            listener?.onItemClicked(it, getItem(position))
         }
 
     }
