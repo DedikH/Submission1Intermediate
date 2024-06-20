@@ -18,6 +18,7 @@ import com.example.bismillahbisaintermediate.Auth.UserRepository
 import com.example.bismillahbisaintermediate.R
 import com.example.bismillahbisaintermediate.Response.ListStoryItem
 import com.example.bismillahbisaintermediate.Response.ListStoryResponse
+import com.example.bismillahbisaintermediate.View.AddStory.AddStory
 import com.example.bismillahbisaintermediate.View.DetailStory.DetailStory
 import com.example.bismillahbisaintermediate.View.Login.Login
 import com.example.bismillahbisaintermediate.View.Login.LoginViewModel
@@ -54,13 +55,14 @@ class ListStory : AppCompatActivity(), RVonclick {
         authRepository = UserRepository(apiService, userPreferenceDataStore)
         val factory = ViewModelFactory(authRepository)
         listStoryViewModel = ViewModelProvider(this, factory).get(ListStoryViewModel::class.java)
-
         binding.rvListStory.layoutManager = LinearLayoutManager(this)
+
         StoryHandler()
         intentdetail()
         appbar()
-
+        intentAdd()
     }
+
     private fun StoryHandler() {
         showLoading(false)
         lifecycleScope.launch {
@@ -105,6 +107,12 @@ class ListStory : AppCompatActivity(), RVonclick {
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
+    private fun intentAdd(){
+        binding.AddStory.setOnClickListener{
+            val intent = Intent(this, AddStory::class.java)
+            startActivity(intent)
+        }
+    }
 
     private fun intentdetail(){
         adapter.listener = this
@@ -139,21 +147,10 @@ class ListStory : AppCompatActivity(), RVonclick {
     }
 
         private fun logouthandle(){
-                AlertDialog.Builder(this@ListStory).apply {
-                    setTitle("Login Succes!")
-                    setMessage("Success")
-                    setPositiveButton("Ya") { _, _ ->
-                        lifecycleScope.launch {
-                            listStoryViewModel.deleteToken()
-                        }
-                        finishAffinity()
-                    }
-                    setNegativeButton("Tidak") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    create()
-                    show()
-                }
+            lifecycleScope.launch {
+                listStoryViewModel.deleteToken()
+            }
+            finishAffinity()
         }
 
         companion object {

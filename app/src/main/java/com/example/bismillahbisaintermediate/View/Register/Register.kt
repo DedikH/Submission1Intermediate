@@ -3,14 +3,18 @@ package com.example.bismillahbisaintermediate.View.Register
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.ContentValues
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.bismillahbisaintermediate.API.APIConfig
 import com.example.bismillahbisaintermediate.R
 import com.example.bismillahbisaintermediate.SharedPrefManager
+import com.example.bismillahbisaintermediate.View.Login.Login
 import com.example.bismillahbisaintermediate.databinding.ActivityRegisterBinding
 import com.example.submission1intermediate.API.Response.ResponseRegister
 import retrofit2.Call
@@ -28,12 +32,21 @@ class Register : AppCompatActivity() {
         passworderror()
         playAnimation()
         btnRegister()
+        LoginIntent()
     }
 
     private fun btnRegister(){
         val button = binding.btnRegister
         button.setOnClickListener{
             RegisterUser()
+        }
+    }
+
+    private fun LoginIntent(){
+        val button = binding.Logintxt
+        button.setOnClickListener{
+            val intent = Intent(this@Register, Login::class.java)
+            startActivity(intent)
         }
     }
 
@@ -108,7 +121,7 @@ class Register : AppCompatActivity() {
             ) {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
-                    if (responseBody != null) {
+                    if (responseBody != null && responseBody.user != null) {
                         if (!responseBody.error) {
                             SharedPrefManager.getInstance(applicationContext).saveRegister(responseBody.user!!)
                         } else {

@@ -3,7 +3,6 @@ package com.example.bismillahbisaintermediate.View.Login
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
-import android.net.Credentials
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,24 +10,15 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.example.bismillahbisaintermediate.API.APIConfig
 import com.example.bismillahbisaintermediate.API.APIConfig.Companion.postLogin
 import com.example.bismillahbisaintermediate.Auth.UserPreferenceDataStore
 import com.example.bismillahbisaintermediate.Auth.UserRepository
-import com.example.bismillahbisaintermediate.R
 import com.example.bismillahbisaintermediate.Response.LoginResponse
 import com.example.bismillahbisaintermediate.View.ListStory.ListStory
 import com.example.bismillahbisaintermediate.View.Register.Register
 import com.example.bismillahbisaintermediate.ViewModelFactory
 import com.example.bismillahbisaintermediate.databinding.ActivityLoginBinding
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,16 +28,14 @@ class Login : AppCompatActivity() {
     private lateinit var userRepository : UserRepository
     private lateinit var loginViewModel : LoginViewModel
     private lateinit var authRepository: UserRepository
-    private var authToken: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize the dependencies
-        val apiService = postLogin() // Assuming APIConfig.create() initializes APIServices
-        val userPreferenceDataStore = UserPreferenceDataStore(this) // Pass context if required
+        val apiService = postLogin()
+        val userPreferenceDataStore = UserPreferenceDataStore(this)
 
         userRepository = UserRepository(apiService, userPreferenceDataStore)
 
@@ -147,34 +135,18 @@ class Login : AppCompatActivity() {
                 response: Response<LoginResponse>
             ) {
                 if (response.isSuccessful) {
-                    AlertDialog.Builder(this@Login).apply {
-                        setTitle("Login Succes!")
-                        setMessage("Success")
-                        setPositiveButton("Lanjut") { _, _ ->
-                            val loginResponse = response.body()!!
-                            val token = loginResponse.loginResult.token
-                            loginViewModel.saveAuthToken(token)
-                            val intent = Intent(context, ListStory::class.java)
-                            intent.putExtra("token", token)
-                            startActivity(intent)
-                            finish()
-                        }
-                        create()
-                        show()
-                    }
+                    Toast.makeText(this@Login, "Login Berhasil", Toast.LENGTH_SHORT).show()
+                    val loginResponse = response.body()!!
+                    val token = loginResponse.loginResult.token
+                    loginViewModel.saveAuthToken(token)
+                    val intent = Intent(this@Login, ListStory::class.java)
+                    intent.putExtra("token", token)
+                    startActivity(intent)
                 } else {
-                    AlertDialog.Builder(this@Login).apply {
-                        setTitle("Login Failed!")
-                        setMessage("Try Again")
-                        setPositiveButton("Lanjut") { _, _ ->
-                            val intent = Intent(context, Login::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
-                            finish()
-                        }
-                        create()
-                        show()
-                    }
+                    Toast.makeText(this@Login, "Login Berhasil", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@Login, Login::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
                 }
             }
 
@@ -183,19 +155,5 @@ class Login : AppCompatActivity() {
             }
         })
     }
-    private fun checkSession(){
-        lifecycleScope.launch {
-             authToken ?: authRepository.getAuthToken().collect{token ->
-                if(token!!.isNotEmpty()){
-                    val intent = Intent(this@Login, ListStory::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
-                }else{
-                    val intent = Intent(this@Login, Login::class.java)
-                    startActivity(intent)
-                }
-            }
-        }
-    }
+
 }
