@@ -6,10 +6,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.util.Patterns
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import com.example.bismillahbisaintermediate.API.APIConfig.Companion.postLogin
 import com.example.bismillahbisaintermediate.Auth.UserPreferenceDataStore
@@ -43,11 +41,10 @@ class Login : AppCompatActivity() {
         loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
         authRepository = UserRepository(apiService, userPreferenceDataStore)
 
-        emailerror()
-        passworderror()
-        IntentRegister()
         playAnimation()
+        CallError()
         btnLoginClick()
+
 //        checkSession()
     }
 
@@ -59,10 +56,8 @@ class Login : AppCompatActivity() {
         }.start()
 
         val logintxt = ObjectAnimator.ofFloat(binding.titlelogin, View.ALPHA, 1f).setDuration(100)
-        val emailtxt = ObjectAnimator.ofFloat(binding.txtemail, View.ALPHA, 1f).setDuration(100)
-        val passwordtxt = ObjectAnimator.ofFloat(binding.txtpassword, View.ALPHA, 1f).setDuration(100)
         val email = ObjectAnimator.ofFloat(binding.EmailBlokLogin, View.ALPHA, 1f).setDuration(100)
-        val password = ObjectAnimator.ofFloat(binding.passwordBlokLogin, View.ALPHA, 1f).setDuration(100)
+        val password = ObjectAnimator.ofFloat(binding.passwordlogin, View.ALPHA, 1f).setDuration(100)
         val title = ObjectAnimator.ofFloat(binding.titlelogin, View.ALPHA, 1f).setDuration(100)
         val btnlogin = ObjectAnimator.ofFloat(binding.btnLogin, View.ALPHA, 1f).setDuration(100)
         val txtregister = ObjectAnimator.ofFloat(binding.registertext, View.ALPHA, 1f).setDuration(100)
@@ -71,28 +66,20 @@ class Login : AppCompatActivity() {
             playTogether(email, password)
         }
         AnimatorSet().apply {
-            playSequentially(title, btnlogin, txtregister, logintxt, emailtxt, passwordtxt, together)
+            playSequentially(title, btnlogin, txtregister, logintxt, together)
             start()
         }
     }
 
 
     //Email Error
-    private fun emailerror() {
-        binding.EmailLogin.setOnFocusChangeListener{ _, focused ->
-            if(!focused){
-                binding.EmailBlokLogin.helperText = validEmail()
-            }
-        }
+
+    private fun CallError(){
+        binding.passwordBlokLogin.Passwordtxt(binding.passwordlogin)
+        binding.EmailBlokLogin.emailerror(binding.EmailLogin)
     }
 
-    private fun validEmail(): String? {
-        val emailtxt = binding.EmailLogin.text.toString()
-        if(!Patterns.EMAIL_ADDRESS.matcher(emailtxt).matches()){
-            return "Email Invalid"
-        }
-        return null
-    }
+
 
     //Password Error
     private fun passworderror() {

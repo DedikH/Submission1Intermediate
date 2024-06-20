@@ -30,7 +30,7 @@ class storyAdapter : ListAdapter<ListStoryItem, storyAdapter.myviewHolder>(DIFF_
                 return oldItem == newItem
             }
             override fun areContentsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id
             }
         }
     }
