@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
+
 class UserPreferenceDataStore(
     private val context: Context
 ) {
@@ -39,8 +40,19 @@ class UserPreferenceDataStore(
                 preferences[TOKEN_KEY] ?: ""
             }
     }
+
+
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_prefs")
         private val TOKEN_KEY = stringPreferencesKey("token_data")
+        private var INSTANCE: UserPreferenceDataStore? = null
+
+        fun getInstance(context: Context): UserPreferenceDataStore {
+            return INSTANCE ?: synchronized(this) {
+                val instance = UserPreferenceDataStore(context)
+                INSTANCE = instance
+                instance
+            }
+        }
     }
 }

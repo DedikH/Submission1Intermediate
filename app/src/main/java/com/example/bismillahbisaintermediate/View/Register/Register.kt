@@ -28,11 +28,16 @@ class Register : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        emailerror()
-        passworderror()
+
         playAnimation()
         btnRegister()
         LoginIntent()
+        CallError()
+    }
+
+    private fun CallError(){
+        binding.EmailBlokRegister.emailerror(binding.EmailRegister)
+        binding.passwordBlokRegister.passworderror(binding.passwordRegister)
     }
 
     private fun btnRegister(){
@@ -50,31 +55,7 @@ class Register : AppCompatActivity() {
         }
     }
 
-    //Email Error
-    private fun emailerror() {
-        binding.EmailRegister.setOnFocusChangeListener{ _, focused ->
-            if(!focused){
-                binding.EmailBlokRegister.helperText = validPassword()
-            }
-        }
-    }
 
-    private fun validPassword(): String? {
-        val emailtxt = binding.EmailRegister.text.toString()
-        if(!Patterns.EMAIL_ADDRESS.matcher(emailtxt).matches()){
-            return "Email Invalid"
-        }
-        return null
-    }
-
-    //Password Error
-    private fun passworderror() {
-        binding.passwordRegister.setOnFocusChangeListener{ _, focused ->
-            if(!focused){
-                binding.passwordBlokRegister.helperText = validPassword()
-            }
-        }
-    }
 
     private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.fotoregister, View.TRANSLATION_X, -30f, 30f).apply {
@@ -84,9 +65,6 @@ class Register : AppCompatActivity() {
         }.start()
 
         val title = ObjectAnimator.ofFloat(binding.titleregister, View.ALPHA, 1f).setDuration(100)
-        val emailtxt = ObjectAnimator.ofFloat(binding.emailtitleregister, View.ALPHA, 1f).setDuration(100)
-        val passwordtxt = ObjectAnimator.ofFloat(binding.passwordtitleregister, View.ALPHA, 1f).setDuration(100)
-        val namatxt = ObjectAnimator.ofFloat(binding.namatxtregister, View.ALPHA, 1f).setDuration(100)
         val nama = ObjectAnimator.ofFloat(binding.NamaRegister, View.ALPHA, 1f).setDuration(100)
         val email = ObjectAnimator.ofFloat(binding.EmailBlokRegister, View.ALPHA, 1f).setDuration(100)
         val password = ObjectAnimator.ofFloat(binding.EmailBlokRegister, View.ALPHA, 1f).setDuration(100)
@@ -97,7 +75,7 @@ class Register : AppCompatActivity() {
             playTogether(email, password)
         }
         AnimatorSet().apply {
-            playSequentially(title, namatxt, nama,btnlogin, txtlogin, emailtxt, passwordtxt, together)
+            playSequentially(title, nama, btnlogin, txtlogin, together)
             start()
         }
     }
@@ -121,8 +99,13 @@ class Register : AppCompatActivity() {
             ) {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
+                    Toast.makeText(this@Register, "User Berhasil Dibuat", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@Register, Login::class.java)
+                    startActivity(intent)
+                    finish()
                     if (responseBody != null && responseBody.user != null) {
                         if (!responseBody.error) {
+
                             SharedPrefManager.getInstance(applicationContext).saveRegister(responseBody.user!!)
                         } else {
                             // Handle API-specific error (check for error code or message in response)

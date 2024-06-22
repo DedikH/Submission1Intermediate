@@ -8,32 +8,29 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bismillahbisaintermediate.API.APIConfig
 import com.example.bismillahbisaintermediate.Auth.UserPreferenceDataStore
 import com.example.bismillahbisaintermediate.Auth.UserRepository
+import com.example.bismillahbisaintermediate.Database.ListStoryDB
 import com.example.bismillahbisaintermediate.R
 import com.example.bismillahbisaintermediate.Response.ListStoryItem
 import com.example.bismillahbisaintermediate.Response.ListStoryResponse
 import com.example.bismillahbisaintermediate.View.AddStory.AddStory
 import com.example.bismillahbisaintermediate.View.DetailStory.DetailStory
-import com.example.bismillahbisaintermediate.View.Login.Login
-import com.example.bismillahbisaintermediate.View.Login.LoginViewModel
+import com.example.bismillahbisaintermediate.View.ListStory.paging.LoadingStateAdapter
+import com.example.bismillahbisaintermediate.View.ListStory.withmaps.StoryPagingAdapter
+import com.example.bismillahbisaintermediate.View.Maps.MapsIntermediate
 import com.example.bismillahbisaintermediate.ViewModelFactory
 import com.example.bismillahbisaintermediate.databinding.ActivityListStoryBinding
-import com.example.bismillahbisaintermediate.databinding.ActivityLoginBinding
-import com.google.gson.GsonBuilder
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.Call
-import retrofit2.CallAdapter
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
 class ListStory : AppCompatActivity(), RVonclick {
@@ -41,6 +38,7 @@ class ListStory : AppCompatActivity(), RVonclick {
     private lateinit var authRepository: UserRepository
     private lateinit var listStoryViewModel : ListStoryViewModel
     private var authToken: String? = null
+    private lateinit var StoryPagingAdapter : StoryPagingAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,57 +50,85 @@ class ListStory : AppCompatActivity(), RVonclick {
         // Initialize the dependencies
         val apiService = APIConfig.postLogin()
         val userPreferenceDataStore = UserPreferenceDataStore(this)
-        authRepository = UserRepository(apiService, userPreferenceDataStore)
+        val storyDatabase = ListStoryDB.getDatabase(this)
+        authRepository = UserRepository(apiService,userPreferenceDataStore, storyDatabase)
         val factory = ViewModelFactory(authRepository)
         listStoryViewModel = ViewModelProvider(this, factory).get(ListStoryViewModel::class.java)
         binding.rvListStory.layoutManager = LinearLayoutManager(this)
 
-        StoryHandler()
+        StoryHandlerPaging()
         intentdetail()
         appbar()
         intentAdd()
     }
 
-    private fun StoryHandler() {
-        showLoading(false)
-        lifecycleScope.launch {
-            val token = authToken ?: authRepository.getAuthToken().first()
-            try {
-                val client = APIConfig.ListStory(token.toString()).getStoriesAll()
+    private fun StoryHandlerPaging(){
+        authToken = intent.getStringExtra("token")
+        StoryPagingAdapter = StoryPagingAdapter()
 
-                client.enqueue(object : Callback<ListStoryResponse> {
-                    override fun onResponse(
-                        call: Call<ListStoryResponse>,
-                        response: Response<ListStoryResponse>
-                    ) {
-                        showLoading(false)
-                        if (response.isSuccessful) {
-                            val responseBody = response.body()
-                            if (responseBody != null && responseBody.listStory.isNotEmpty()) {
-                                SetListUsers(responseBody.listStory)
-                            } else {
-                                Log.e(ContentValues.TAG, "No stories found")
-                            }
-                        } else {
-                            Log.e(ContentValues.TAG, "API response error: ${response.message()}")
-                        }
-                    }
-                    override fun onFailure(call: Call<ListStoryResponse>, t: Throwable) {
-                        showLoading(false)
-                        Log.e(ContentValues.TAG, "API call failure: ${t.message}")
-                    }
-                })
-            } catch (e: IOException) {
-                showLoading(false)
-                Log.e(ContentValues.TAG, "IOException: ${e.message}")
+        binding.rvListStory.adapter = StoryPagingAdapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                StoryPagingAdapter.retry()
+            }
+        )
+
+        lifecycleScope.launch {
+            listStoryViewModel.getStories().collectLatest { pagingData ->
+                StoryPagingAdapter.submitData(pagingData)
             }
         }
-    }
 
-    private fun SetListUsers(listStory: List<ListStoryItem>) {
-        adapter.submitList(listStory)
-        binding.rvListStory.adapter = adapter
+        StoryPagingAdapter.setOnItemClickListener { storyItem ->
+            val intent = Intent(this, DetailStory::class.java)
+            val bundle = Bundle()
+            intent.putExtra("title", storyItem.name)
+            intent.putExtra("description", storyItem.description)
+            bundle.putString("imageUrl", storyItem.photoUrl)
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
+
     }
+//    private fun StoryHandler() {
+//        showLoading(false)
+//        lifecycleScope.launch {
+//            val token = authToken ?: authRepository.getAuthToken().first()
+//            try {
+//                val client = APIConfig.ListStory(token.toString()).getStoriesAll()
+//
+//                client.enqueue(object : Callback<ListStoryResponse> {
+//                    override fun onResponse(
+//                        call: Call<ListStoryResponse>,
+//                        response: Response<ListStoryResponse>
+//                    ) {
+//                        showLoading(false)
+//                        if (response.isSuccessful) {
+//                            val responseBody = response.body()
+//                            if (responseBody != null && responseBody.listStory.isNotEmpty()) {
+//                                SetListUsers(responseBody.listStory)
+//                            } else {
+//                                Log.e(ContentValues.TAG, "No stories found")
+//                            }
+//                        } else {
+//                            Log.e(ContentValues.TAG, "API response error: ${response.message()}")
+//                        }
+//                    }
+//                    override fun onFailure(call: Call<ListStoryResponse>, t: Throwable) {
+//                        showLoading(false)
+//                        Log.e(ContentValues.TAG, "API call failure: ${t.message}")
+//                    }
+//                })
+//            } catch (e: IOException) {
+//                showLoading(false)
+//                Log.e(ContentValues.TAG, "IOException: ${e.message}")
+//            }
+//        }
+//    }
+
+//    private fun SetListUsers(listStory: List<ListStoryItem>) {
+//        adapter.submitList(listStory)
+//        binding.rvListStory.adapter = adapter
+//    }
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
@@ -142,6 +168,11 @@ class ListStory : AppCompatActivity(), RVonclick {
                 logouthandle()
                 true
             }
+            R.id.maps -> {
+                startActivity(Intent(this, MapsIntermediate::class.java))
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

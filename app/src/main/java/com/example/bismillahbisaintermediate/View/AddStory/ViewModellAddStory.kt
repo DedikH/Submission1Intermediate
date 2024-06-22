@@ -15,10 +15,10 @@ import retrofit2.Call
 class ViewModellAddStory(
     private val authRepository: UserRepository
 ) : ViewModel() {
-    private val story = MutableLiveData<Call<ResponseAddStory>>()
-    val liveDataStory : LiveData<Call<ResponseAddStory>> = story
+    private val story = MutableLiveData<ResponseAddStory>()
+    val liveDataStory : LiveData<ResponseAddStory> = story
 
-    suspend fun uploadStoryImage(token: String, multipartBody: MultipartBody.Part, description: RequestBody): Call<ResponseAddStory> {
+    suspend fun uploadStoryImage(token: String, multipartBody: MultipartBody.Part, description: RequestBody): ResponseAddStory {
         return withContext(Dispatchers.IO) {
             try {
                 val apiService = APIConfig.ListStory(token)

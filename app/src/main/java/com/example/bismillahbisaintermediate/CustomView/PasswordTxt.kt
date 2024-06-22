@@ -28,7 +28,7 @@ class PasswordTxt(context: Context, attrs: AttributeSet) : TextInputLayout(conte
         }
     }
 
-    fun Passwordtxt(editText: TextInputEditText) {
+    fun passworderror(editText: EditText) {
         editText.addTextChangedListener(textWatcher)
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.bismillahbisaintermediate.Auth.UserRepository
 import com.example.bismillahbisaintermediate.View.AddStory.ViewModellAddStory
 import com.example.bismillahbisaintermediate.View.ListStory.ListStoryViewModel
+import com.example.bismillahbisaintermediate.View.ListStory.withmaps.MapsViewModel
 import com.example.bismillahbisaintermediate.View.Login.LoginViewModel
 
 class ViewModelFactory(private val userRepository: UserRepository) : ViewModelProvider.Factory {
@@ -20,6 +21,10 @@ class ViewModelFactory(private val userRepository: UserRepository) : ViewModelPr
         if (modelClass.isAssignableFrom(ViewModellAddStory::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ViewModellAddStory(userRepository) as T
+        }
+        if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return MapsViewModel(userRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

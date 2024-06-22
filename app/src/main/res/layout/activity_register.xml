@@ -25,36 +25,19 @@
         android:textSize="50px"
         android:text="REGISTER"/>
 
-    <TextView
-        android:id="@+id/namatxtregister"
-        android:textColor="#080808"
-        android:textSize="13sp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginStart="36dp"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Nama"
-        />
-    <androidx.appcompat.widget.AppCompatEditText
+
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/NamaRegister"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_marginBottom="20dp"
+        android:text="Nama"
         android:layout_marginHorizontal="34dp"
         android:background="@drawable/rounded_shape"/>
 
-    <TextView
-        android:id="@+id/emailtitleregister"
-        android:textColor="#080808"
-        android:textSize="13sp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginStart="36dp"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Email"
-        />
 
-    <com.google.android.material.textfield.TextInputLayout
+
+    <com.example.bismillahbisaintermediate.CustomView.EmailTxt
         android:id="@+id/EmailBlokRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,25 +46,17 @@
         app:helperTextTextColor="@color/red"
         app:startIconCheckable="true">
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/EmailRegister"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:inputType="textEmailAddress"
+            android:text="Email"
             android:background="@drawable/rounded_shape"/>
-    </com.google.android.material.textfield.TextInputLayout>
+    </com.example.bismillahbisaintermediate.CustomView.EmailTxt>
 
-    <TextView
-        android:id="@+id/passwordtitleregister"
-        android:textColor="#080808"
-        android:textSize="13sp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginStart="35dp"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Password"
-        />
-    <com.google.android.material.textfield.TextInputLayout
+
+    <com.example.bismillahbisaintermediate.CustomView.PasswordTxt
         android:id="@+id/passwordBlokRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -90,13 +65,14 @@
         app:helperTextTextColor="@color/red"
         app:passwordToggleEnabled="true">
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordRegister"
             android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Password"
             android:background="@drawable/rounded_shape" />
-    </com.google.android.material.textfield.TextInputLayout>
+    </com.example.bismillahbisaintermediate.CustomView.PasswordTxt>
 
 
     <com.example.bismillahbisaintermediate.View.Button.Button

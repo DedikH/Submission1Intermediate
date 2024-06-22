@@ -35,9 +35,10 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:alpha="0"
-        tools:alpha="100">
+        tools:alpha="100"
+        app:startIconDrawable="@drawable/baseline_mail_24">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/EmailLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,17 +56,20 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:alpha="0"
-        tools:alpha="100">
+        tools:alpha="100"
+        app:startIconDrawable="@drawable/baseline_mail_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passwordlogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            tools:ignore="SpeakableTextPresentCheck" />
     </com.example.bismillahbisaintermediate.CustomView.PasswordTxt>
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/passwordlogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        tools:ignore="SpeakableTextPresentCheck" />
+
     <com.example.bismillahbisaintermediate.View.Button.Button
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"

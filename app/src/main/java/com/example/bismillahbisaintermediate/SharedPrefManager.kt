@@ -27,5 +27,7 @@ class SharedPrefManager private constructor(private val mCtx: Context) {
         editor.putString("email", user.email)
         editor.putString("password", user.password)
         editor.apply()
+
+
     }
 }

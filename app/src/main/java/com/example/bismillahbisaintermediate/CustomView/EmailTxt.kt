@@ -16,7 +16,7 @@ class EmailTxt (context: Context, attrs: AttributeSet) : TextInputLayout(context
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             s?.let {
-                if (Patterns.EMAIL_ADDRESS.matcher(it.toString()).matches()) {
+                error = if (Patterns.EMAIL_ADDRESS.matcher(it.toString()).matches()) {
                     null
                 } else {
                     "Email Tidak Valid"

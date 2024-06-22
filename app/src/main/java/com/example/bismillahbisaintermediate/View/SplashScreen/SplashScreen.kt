@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.bismillahbisaintermediate.API.APIConfig
 import com.example.bismillahbisaintermediate.Auth.UserPreferenceDataStore
 import com.example.bismillahbisaintermediate.Auth.UserRepository
+import com.example.bismillahbisaintermediate.Database.ListStoryDB
 import com.example.bismillahbisaintermediate.View.ListStory.ListStory
 import com.example.bismillahbisaintermediate.View.Login.Login
 import com.example.bismillahbisaintermediate.databinding.ActivitySplashScreenBinding
@@ -27,7 +28,8 @@ class SplashScreen : AppCompatActivity() {
         val apiService = APIConfig.postLogin()
         val userPreferenceDataStore = UserPreferenceDataStore(this)
 
-        authRepository = UserRepository(apiService, userPreferenceDataStore)
+        val storyDatabase = ListStoryDB.getDatabase(this)
+        authRepository = UserRepository(apiService,userPreferenceDataStore, storyDatabase)
 
         Handler(Looper.getMainLooper()).postDelayed({
             checkSession()

@@ -1,13 +1,13 @@
 package com.example.bismillahbisaintermediate.View.AddStory
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,9 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.bismillahbisaintermediate.API.APIConfig
 import com.example.bismillahbisaintermediate.Auth.UserPreferenceDataStore
 import com.example.bismillahbisaintermediate.Auth.UserRepository
-import com.example.bismillahbisaintermediate.R
-import com.example.bismillahbisaintermediate.Response.ResponseAddStory
-import com.example.bismillahbisaintermediate.View.ListStory.ListStoryViewModel
+import com.example.bismillahbisaintermediate.Database.ListStoryDB
+import com.example.bismillahbisaintermediate.View.ListStory.ListStory
 import com.example.bismillahbisaintermediate.ViewModelFactory
 import com.example.bismillahbisaintermediate.databinding.ActivityAddStoryBinding
 import kotlinx.coroutines.flow.first
@@ -46,7 +45,8 @@ class AddStory : AppCompatActivity() {
 
         val apiService = APIConfig.postLogin()
         val userPreferenceDataStore = UserPreferenceDataStore(this)
-        authRepository = UserRepository(apiService, userPreferenceDataStore)
+        val storyDatabase = ListStoryDB.getDatabase(this)
+        authRepository = UserRepository(apiService,userPreferenceDataStore, storyDatabase)
         val factory = ViewModelFactory(authRepository)
         viewModellAddStory = ViewModelProvider(this, factory).get(ViewModellAddStory::class.java)
 
@@ -68,7 +68,6 @@ private fun checkStoragePermissions() {
     private fun startGallery() {
         binding.ListGalleryButton.setOnClickListener{
             launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            showLoading(false)
         }
     }
 
@@ -116,7 +115,6 @@ private fun checkStoragePermissions() {
     currentImageUri?.let { uri ->
         val imageFile = uriToFile(uri, this).reduceFileImage()
         val description = binding.ListAddDescription.text.toString()
-        showLoading(true)
         val requestBody = description.toRequestBody("text/plain".toMediaType())
         val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
         val multipartBody = MultipartBody.Part.createFormData(
@@ -135,6 +133,8 @@ private fun checkStoragePermissions() {
                 }
                 viewModellAddStory.liveDataStory.observe(this@AddStory){
                     Toast.makeText(this@AddStory, "Add Story Succes", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@AddStory, ListStory::class.java)
+                    startActivity(intent)
                 }
             }catch (e: HttpException){
                 AlertDialog.Builder(this@AddStory).apply {
@@ -161,9 +161,6 @@ private fun checkStoragePermissions() {
         }
     }
 
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar2.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
 
     companion object {
         private const val STORAGE_PERMISSION_CODE = 101

@@ -10,7 +10,9 @@ import com.bumptech.glide.Glide
 import com.example.bismillahbisaintermediate.Response.ListStoryItem
 import com.example.bismillahbisaintermediate.databinding.CardviewstoryBinding
 
-class storyAdapter : ListAdapter<ListStoryItem, storyAdapter.myviewHolder>(DIFF_CALLBACK) {
+//ListAdapter<ListStoryItem, storyAdapter.myviewHolder>(DIFF_CALLBACK)
+
+class storyAdapter : PagingDataAdapter<ListStoryItem, storyAdapter.myviewHolder>(DIFF_CALLBACK) {
     var listener : RVonclick? = null
     class myviewHolder (val binding : CardviewstoryBinding) : RecyclerView.ViewHolder(binding.root){
         fun onBind(item : ListStoryItem){
@@ -42,7 +44,7 @@ class storyAdapter : ListAdapter<ListStoryItem, storyAdapter.myviewHolder>(DIFF_
         }
 
         holder.binding.cvListStory.setOnClickListener{
-            listener?.onItemClicked(it, getItem(position))
+            getItem(position)?.let { it1 -> listener?.onItemClicked(it, it1) }
         }
 
     }

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.bismillahbisaintermediate.API.APIConfig.Companion.postLogin
 import com.example.bismillahbisaintermediate.Auth.UserPreferenceDataStore
 import com.example.bismillahbisaintermediate.Auth.UserRepository
+import com.example.bismillahbisaintermediate.Database.ListStoryDB
 import com.example.bismillahbisaintermediate.Response.LoginResponse
 import com.example.bismillahbisaintermediate.View.ListStory.ListStory
 import com.example.bismillahbisaintermediate.View.Register.Register
@@ -34,18 +35,25 @@ class Login : AppCompatActivity() {
 
         val apiService = postLogin()
         val userPreferenceDataStore = UserPreferenceDataStore(this)
-
-        userRepository = UserRepository(apiService, userPreferenceDataStore)
+        val storyDatabase = ListStoryDB.getDatabase(this)
+        authRepository = UserRepository(apiService,userPreferenceDataStore, storyDatabase)
 
         val factory = ViewModelFactory(userRepository)
         loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
-        authRepository = UserRepository(apiService, userPreferenceDataStore)
 
         playAnimation()
         CallError()
         btnLoginClick()
+        btnRegisterClick()
 
 //        checkSession()
+    }
+
+    private fun btnRegisterClick() {
+        binding.registertext.setOnClickListener {
+            val intent = Intent(this, Register::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun playAnimation() {
@@ -57,7 +65,7 @@ class Login : AppCompatActivity() {
 
         val logintxt = ObjectAnimator.ofFloat(binding.titlelogin, View.ALPHA, 1f).setDuration(100)
         val email = ObjectAnimator.ofFloat(binding.EmailBlokLogin, View.ALPHA, 1f).setDuration(100)
-        val password = ObjectAnimator.ofFloat(binding.passwordlogin, View.ALPHA, 1f).setDuration(100)
+        val password = ObjectAnimator.ofFloat(binding.passwordBlokLogin, View.ALPHA, 1f).setDuration(100)
         val title = ObjectAnimator.ofFloat(binding.titlelogin, View.ALPHA, 1f).setDuration(100)
         val btnlogin = ObjectAnimator.ofFloat(binding.btnLogin, View.ALPHA, 1f).setDuration(100)
         val txtregister = ObjectAnimator.ofFloat(binding.registertext, View.ALPHA, 1f).setDuration(100)
@@ -75,42 +83,15 @@ class Login : AppCompatActivity() {
     //Email Error
 
     private fun CallError(){
-        binding.passwordBlokLogin.Passwordtxt(binding.passwordlogin)
         binding.EmailBlokLogin.emailerror(binding.EmailLogin)
+        binding.passwordBlokLogin.passworderror(binding.passwordlogin)
     }
 
-
-
-    //Password Error
-    private fun passworderror() {
-        binding.passwordlogin.setOnFocusChangeListener{ _, focused ->
-            if(!focused){
-                binding.passwordBlokLogin.helperText = validPassword()
-            }
-        }
-    }
-
-    private fun validPassword(): String? {
-        val passwordtxt = binding.passwordlogin.text.toString()
-        if(passwordtxt.length < 8){
-            return "Password Kurang dari 8 Huruf"
-        }else{
-            binding.passwordBlokLogin.helperText = ""
-        }
-        return null
-    }
-    private fun IntentRegister(){
-        binding.registertext.setOnClickListener {
-            val i = Intent(this, Register::class.java)
-            startActivity(i)
-        }
-    }
     private fun btnLoginClick(){
         binding.btnLogin.setOnClickListener{
             handleLogin()
         }
     }
-
 
     private fun handleLogin() {
         val email = binding.EmailLogin.text.toString().trim()
