@@ -21,12 +21,12 @@ class PagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListStoryItem> {
         return try {
             val page = params.key ?: INITIAL_PAGE_INDEX
-            val responseData = apiService.getStoriesPaging(page, params.loadSize)
+            val responseData = apiService.getStoriesAll(page, params.loadSize)
 
             LoadResult.Page(
-                data = responseData,
+                data = responseData.listStory,
                 prevKey = if (page == 1) null else page - 1,
-                nextKey = if (responseData.isNullOrEmpty()) null else page + 1
+                nextKey = if (responseData.listStory.isNullOrEmpty()) null else page + 1
             )
         } catch (exception: Exception) {
             return LoadResult.Error(exception)

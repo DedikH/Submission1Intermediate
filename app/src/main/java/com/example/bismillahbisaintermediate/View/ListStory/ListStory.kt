@@ -24,19 +24,17 @@ import com.example.bismillahbisaintermediate.View.ListStory.paging.LoadingStateA
 import com.example.bismillahbisaintermediate.View.ListStory.withmaps.StoryPagingAdapter
 import com.example.bismillahbisaintermediate.View.Maps.MapsIntermediate
 import com.example.bismillahbisaintermediate.ViewModelFactory
+import com.example.bismillahbisaintermediate.calls
 import com.example.bismillahbisaintermediate.databinding.ActivityListStoryBinding
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
+import androidx.activity.viewModels
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.io.IOException
 
 class ListStory : AppCompatActivity(), RVonclick {
     private lateinit var binding : ActivityListStoryBinding
     private lateinit var authRepository: UserRepository
-    private lateinit var listStoryViewModel : ListStoryViewModel
+    private val listStoryViewModel by viewModels<ListStoryViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
     private var authToken: String? = null
     private lateinit var StoryPagingAdapter : StoryPagingAdapter
 
@@ -48,13 +46,12 @@ class ListStory : AppCompatActivity(), RVonclick {
         authToken = intent.getStringExtra("token")
 
         // Initialize the dependencies
-        val apiService = APIConfig.postLogin()
-        val userPreferenceDataStore = UserPreferenceDataStore(this)
-        val storyDatabase = ListStoryDB.getDatabase(this)
-        authRepository = UserRepository(apiService,userPreferenceDataStore, storyDatabase)
-        val factory = ViewModelFactory(authRepository)
-        listStoryViewModel = ViewModelProvider(this, factory).get(ListStoryViewModel::class.java)
-        binding.rvListStory.layoutManager = LinearLayoutManager(this)
+//        val apiService = APIConfig.postLogin()
+//        val userPreferenceDataStore = UserPreferenceDataStore(this)
+//        val storyDatabase = ListStoryDB.getDatabase(this)
+//        authRepository = UserRepository(apiService,userPreferenceDataStore, storyDatabase)
+//        val factory = ViewModelFactory(authRepository)
+//        listStoryViewModel = ViewModelProvider(this, factory).get(ListStoryViewModel::class.java)
 
         StoryHandlerPaging()
         intentdetail()
@@ -65,6 +62,8 @@ class ListStory : AppCompatActivity(), RVonclick {
     private fun StoryHandlerPaging(){
         authToken = intent.getStringExtra("token")
         StoryPagingAdapter = StoryPagingAdapter()
+        binding.rvListStory.layoutManager = LinearLayoutManager(this)
+
 
         binding.rvListStory.adapter = StoryPagingAdapter.withLoadStateFooter(
             footer = LoadingStateAdapter {
@@ -73,8 +72,18 @@ class ListStory : AppCompatActivity(), RVonclick {
         )
 
         lifecycleScope.launch {
-            listStoryViewModel.getStories().collectLatest { pagingData ->
-                StoryPagingAdapter.submitData(pagingData)
+            listStoryViewModel.getStori().observe(this@ListStory) { pagingData ->
+                when(pagingData){
+                    is calls.Success ->{
+                        onSuccess()
+                    }
+                    is calls.Loading -> {
+                        showLoading(true)
+                    }
+                    is calls.Error -> {
+                        Log.d("PagingData", pagingData.toString())
+                    }
+                }
             }
         }
 
@@ -88,6 +97,11 @@ class ListStory : AppCompatActivity(), RVonclick {
             startActivity(intent)
         }
 
+    }
+    private fun onSuccess(){
+        listStoryViewModel.getStories.observe(this) {
+            StoryPagingAdapter.submitData(lifecycle, it)
+        }
     }
 //    private fun StoryHandler() {
 //        showLoading(false)

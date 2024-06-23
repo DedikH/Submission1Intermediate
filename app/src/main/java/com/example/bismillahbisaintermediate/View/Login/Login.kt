@@ -38,7 +38,7 @@ class Login : AppCompatActivity() {
         val storyDatabase = ListStoryDB.getDatabase(this)
         authRepository = UserRepository(apiService,userPreferenceDataStore, storyDatabase)
 
-        val factory = ViewModelFactory(userRepository)
+        val factory = ViewModelFactory(authRepository)
         loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
 
         playAnimation()

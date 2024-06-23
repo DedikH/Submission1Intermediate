@@ -1,6 +1,7 @@
 package com.example.bismillahbisaintermediate.Response
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 data class ListStoryResponse(
@@ -33,6 +34,7 @@ data class ListStoryItem(
 	@field:SerializedName("lon")
 	val lon: Double? = null,
 
+	@PrimaryKey
 	@field:SerializedName("id")
 	val id: String,
 

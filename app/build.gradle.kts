@@ -79,5 +79,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     ksp("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-paging::2.6.1")
+    implementation("androidx.room:room-paging:2.6.1")
+    implementation("androidx.activity:activity-ktx:1.9.0")
+
 }

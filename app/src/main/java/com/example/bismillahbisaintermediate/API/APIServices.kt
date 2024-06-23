@@ -38,7 +38,7 @@ interface APIServices {
     fun getStoriesAll(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20
-    ): Call<ListStoryResponse>
+    ): ListStoryResponse
 
     @POST("stories")
     @Multipart
