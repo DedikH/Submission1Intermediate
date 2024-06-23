@@ -1,16 +1,18 @@
 package com.example.bismillahbisaintermediate.View.ListStory.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.example.bismillahbisaintermediate.Auth.UserPreferenceDataStore
 import com.example.bismillahbisaintermediate.Response.ListStoryResponse
 import com.example.bismillahbisaintermediate.Auth.UserRepository
 import com.example.bismillahbisaintermediate.Response.ListStoryItem
 import com.example.submission1intermediate.API.APIServices
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import retrofit2.Call
 
 class PagingSource(
     private val apiService: APIServices
 ) : PagingSource<Int, ListStoryItem>(){
-
     override fun getRefreshKey(state: PagingState<Int, ListStoryItem>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)

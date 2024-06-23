@@ -35,7 +35,7 @@ interface APIServices {
     ): Call<LoginResponse>
 
     @GET("stories")
-    fun getStoriesAll(
+    suspend fun getStoriesAll(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20
     ): ListStoryResponse

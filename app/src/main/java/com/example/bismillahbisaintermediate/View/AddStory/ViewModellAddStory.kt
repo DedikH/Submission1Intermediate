@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
 
 class ViewModellAddStory(
     private val authRepository: UserRepository

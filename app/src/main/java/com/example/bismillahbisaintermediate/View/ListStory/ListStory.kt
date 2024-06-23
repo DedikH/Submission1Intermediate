@@ -72,7 +72,7 @@ class ListStory : AppCompatActivity(), RVonclick {
         )
 
         lifecycleScope.launch {
-            listStoryViewModel.getStori().observe(this@ListStory) { pagingData ->
+            listStoryViewModel.getStory().observe(this@ListStory) { pagingData ->
                 when(pagingData){
                     is calls.Success ->{
                         onSuccess()
